@@ -10,8 +10,30 @@
         crossorigin="anonymous"></script>
     <script>
         const socket = io('http://localhost:3333', {
-            transports: ['polling'] // Usando o mecanismo de transporte polling
+            transports: ['websocket'] // Usando o mecanismo de transporte polling
         });
+
+        socket.on('teste', (res) => {
+            escreverMensagemEmTela(res.usuario, res.mensagem);;
+        });
+
+        function send() {
+
+            const usuario = document.querySelector('#usuario').value;
+            const mensagem = document.querySelector('#mensagem').value;
+
+            socket.emit('teste', { usuario, mensagem });
+
+            escreverMensagemEmTela('EU', mensagem);
+        }
+
+        function escreverMensagemEmTela(usuario, mensagem) {
+            let mensagemhtml = document.querySelector('#mensagens').innerHTML;
+
+            mensagemhtml += `<p><strong>${usuario}</strong> - ${mensagem}</p> `
+
+            document.querySelector('#mensagens').innerHTML = mensagemhtml;
+        }
 
     </script>
 
@@ -19,7 +41,16 @@
 </head>
 
 <body>
-    <h1>Hello World</h1>
+    <input id="usuario" placeholder="Informar o usuario">
+    <hr />
+
+    <textarea id="mensagem"></textarea>
+    <br>
+    <button onclick="send()">Enviar</button>
+    <hr>
+
+    <h3>MENSAGENS</h3>
+    <div id="mensagens"></div>
 </body>
 
 </html>

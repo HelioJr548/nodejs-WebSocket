@@ -11,8 +11,17 @@ app.use(express.static(`${__dirname}/public/`)); // Configura o servidor Express
 const io = socketio(server); // Inicializa o Socket.io passando o servidor HTTP como argumento
 
 io.on('connect', (socket) => { // Evento disparado quando um cliente se conecta ao servidor via WebSocket
+
+    io.to(socket.id).emit({
+        status: true,
+        message: "conexão estabelecida com o servidor"
+    });
+
     socket.on('teste', (res) => { // Evento 'teste' recebido do cliente via WebSocket
-        console.log(res); // Imprime o conteúdo recebido no console
+        console.log('MENSAGEM RECEBIDA', res); // Imprime o conteúdo recebido no console
+
+        socket.broadcast.emit('teste', res);
+
     });
 });
 
