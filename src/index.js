@@ -1,6 +1,5 @@
 import express from 'express'; // Importa o framework Express
 import http from 'http'; // Importa o módulo HTTP do Node.js
-
 import socketio from "socket.io"; // Importa o módulo Socket.io
 
 const app = express(); // Cria uma instância do Express
@@ -12,6 +11,7 @@ const io = socketio(server); // Inicializa o Socket.io passando o servidor HTTP 
 
 io.on('connect', (socket) => { // Evento disparado quando um cliente se conecta ao servidor via WebSocket
 
+    // Envia uma mensagem para o cliente recém-conectado
     io.to(socket.id).emit({
         status: true,
         message: "conexão estabelecida com o servidor"
@@ -20,8 +20,8 @@ io.on('connect', (socket) => { // Evento disparado quando um cliente se conecta 
     socket.on('teste', (res) => { // Evento 'teste' recebido do cliente via WebSocket
         console.log('MENSAGEM RECEBIDA', res); // Imprime o conteúdo recebido no console
 
+        // Envia a mensagem recebida para todos os clientes conectados, exceto o remetente
         socket.broadcast.emit('teste', res);
-
     });
 });
 
